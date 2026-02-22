@@ -15,13 +15,14 @@ const app = express();
 dotenv.config();
 //console.log(process.env);
 
-//mongoDB Atlas Connection String
-const DB_CONNECTION = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.${process.env.CLUSTER_ID}.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`
-
-//TODO - Replace you Connection String here
-const connectDB = async() => {
-    await mongoose.connect(DB_CONNECTION)
-}
+// MongoDB connection string from .env (Option B)
+const connectDB = async () => {
+    const { MONGODB_URI } = process.env;
+    if (!MONGODB_URI) {
+        throw new Error('MONGODB_URI is not set in .env');
+    }
+    await mongoose.connect(MONGODB_URI);
+};
 
 async function startServer() {
     //Define Apollo Server
